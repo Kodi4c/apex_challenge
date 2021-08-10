@@ -53,6 +53,28 @@ function MovieDisplay() {
     if (loading) return 'Loading...';
     if (error) return `Error! ${error.message}`;
 
+    let day = [];
+    let month = [];
+    let year = "";
+    let splitDate ="";
+
+
+    const dateFormatter = (input) =>{
+
+        if (input == null){
+            console.log("Input 0")
+        }else{
+        console.log(input)
+        console.log(typeof (input))
+        splitDate = input.split("-",3) 
+        year = splitDate[0]
+        month = splitDate[1]
+        day = splitDate[2].split("T",1)
+        console.log(day + "/" + month + "/" +  year)
+        }
+ 
+    }
+
 
     return (
 
@@ -62,8 +84,9 @@ function MovieDisplay() {
             {data.searchMovies.map(movie => (
                   
                   <div>
-                     {movie.id}<br/>
-                     {movie.releaseDate}<br/>
+                     # : {movie.id}<br/>
+                     {dateFormatter(movie.releaseDate)}
+                     Release Date : {year}/{month}/{day}<br/>
                      {movie.name}<br/>
                      {movie.overview}<br/><br/>
   
