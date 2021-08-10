@@ -12,7 +12,7 @@ import "./MovieDisplay.css"
 import { gql, useQuery } from '@apollo/client';
 import eventBus from './Eventbus';
 
-function MovieDisplay({ onMovieSelected }) {
+function MovieDisplay() {
 
     let [movieReceiver, setMovieReceiver] = useState("");
 
@@ -46,7 +46,7 @@ function MovieDisplay({ onMovieSelected }) {
             }
             }
         }
-    `;
+    `
 
     const { data, loading, error } = useQuery(GET_MOVIES);
   

@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import eventBus from './Eventbus';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import SendIcon from '@material-ui/icons/Send';
 
 
 function SearchField() {
@@ -38,7 +38,7 @@ function SearchField() {
         document.getElementById("outlined-basic").value = "";
     }
 
-    const startSearch = () =>{
+    const handleClick = () =>{
 
         console.log("value ref:",valueRef.current.value)
         setMovieSender(movieSender = valueRef.current.value)
@@ -47,6 +47,18 @@ function SearchField() {
         clearText()
         
     }
+
+    const handleSubmit =(event) =>{
+        
+        event.preventDefault();
+        handleClick()
+    }
+
+    const handleKeyPress = (event) =>{
+
+        event.preventDefault();
+        handleClick()
+    };
     
 
     return (
@@ -61,13 +73,15 @@ function SearchField() {
                 justifyContent="center"
                 alignItems="center">
 
-                <form className={classes.root} noValidate autoComplete="off">
+                <form 
+                    className={classes.root} 
+                    noValidate autoComplete="off"
+                    onSubmit={handleSubmit}>
                     <TextField 
                             id="outlined-basic" 
                             label="Search For Movies" 
                             variant="outlined" 
-                            inputRef={valueRef}
-                           />
+                            inputRef={valueRef}/>
                     
                 </form>
             </Box>
@@ -81,9 +95,9 @@ function SearchField() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    endIcon={<Icon>send</Icon>}
-                    onClick={startSearch}
-                >
+                    endIcon={<SendIcon/>}
+                    onClick={handleClick}
+                    onKeyPress={handleKeyPress}>
                     Send
                 </Button>
             </Box>
