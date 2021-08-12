@@ -11,10 +11,13 @@ import SearchField from './SearchField'
 
 function Content() {
     return (
+        
         <div id ="content">
             <SearchField/>
             <MovieDisplay/>
         </div>
+    
+        
     )
 }
 

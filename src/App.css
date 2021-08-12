@@ -12,5 +12,33 @@ body, #root, .App {
   padding:0px;
   box-sizing:border-box;
   font-family: monospace;
+  /* background-image: url(D:\Web_Dev\Javascript\react_apex_labs\movie_finder\src\components\images\mountain_2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center; */
+  /* resize: both; */
+  background-color:#231c8c;
+
+}
+
+#background{
+  width:100%;
+  min-width:940px;
+  height:100vh;
+  background-image: url(D:\Web_Dev\Javascript\react_apex_labs\movie_finder\src\components\images\mountain_2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+
+#outer_container{
+  width: 100%;
+  height: 100%;
+  margin:0 auto;
+  padding: 60px 0px 60px 0px;
+  box-sizing:border-box;
+  font-family: monospace;
 
 }

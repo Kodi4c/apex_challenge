@@ -13,9 +13,11 @@ import Container from '@material-ui/core/Container';
 function App() {
   return (
     <div className="App">
-      <Container maxWidth="md">
-          <Content/>
-      </Container>
+      <div id="background">
+        <Container maxWidth="md" id="outer_container">
+            <Content/>
+        </Container>
+      </div>
     </div>
   );
 }

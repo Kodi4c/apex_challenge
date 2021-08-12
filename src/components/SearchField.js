@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import eventBus from './Eventbus';
 import Button from '@material-ui/core/Button';
-import SendIcon from '@material-ui/icons/Send';
+import SearchIcon from '@material-ui/icons/Search';
 
 
 function SearchField() {
@@ -40,9 +40,9 @@ function SearchField() {
 
     const handleClick = () =>{
 
-        console.log("value ref:",valueRef.current.value)
+        // console.log("value ref:",valueRef.current.value)
         setMovieSender(movieSender = valueRef.current.value)
-        console.log("starting SEND: ",movieSender)
+        // console.log("starting SEND: ",movieSender)
         eventBus.dispatch("newSearchTerm",movieSender)
         clearText()
         
@@ -68,6 +68,15 @@ function SearchField() {
             justifyContent="center"
             alignItems="center">
 
+            <Box id = "text"
+                display="flex" 
+                justifyContent="center"
+                alignItems="center">
+            
+                New Horizon Movies
+
+            </Box>
+            
             <Box 
                 display="flex" 
                 justifyContent="center"
@@ -76,7 +85,8 @@ function SearchField() {
                 <form 
                     className={classes.root} 
                     noValidate autoComplete="off"
-                    onSubmit={handleSubmit}>
+                    onSubmit={handleSubmit}
+                    border="10px solid black">
                     <TextField 
                             id="outlined-basic" 
                             label="Search For Movies" 
@@ -95,10 +105,10 @@ function SearchField() {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    endIcon={<SendIcon/>}
+                    startIcon={<SearchIcon/>}
                     onClick={handleClick}
                     onKeyPress={handleKeyPress}>
-                    Send
+                    Search
                 </Button>
             </Box>
         </Box>
