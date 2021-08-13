@@ -12,7 +12,9 @@ import "./MovieDisplay.css"
 import { gql, useQuery } from '@apollo/client';
 import eventBus from './Eventbus';
 import Box from '@material-ui/core/Box';
-import CircularProgress from "./CircularProgress"
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+const OMBD_API = "5ea585f1"
 
 function MovieDisplay() {
 
@@ -58,7 +60,7 @@ function MovieDisplay() {
     const loader = () => {
         
         if (loading) {
-            return <div className="query_message"><CircularProgress/></div>; 
+            return <div className="query_message"><div><CircularProgress color="secondary"/></div><div>Loading...</div></div>; 
         }    
     }
 
@@ -95,14 +97,13 @@ function MovieDisplay() {
  
     }
 
-    const handleClick = (movie) =>{
+    const fetchWikipedia = (movie) => {
         let url = "https://en.wikipedia.org/w/api.php"; 
 
         const params = {
-            action: "opensearch",
-            search: movie,
-            limit: "5",
-            namespace: "0",
+            action: "query",
+            list: "search",
+            srsearch: movie,
             format: "json"
         };
 
@@ -113,6 +114,30 @@ function MovieDisplay() {
             .then(function(response){return response.json();})
             .then(function(response) {console.log(response);})
             .catch(function(error){console.log(error);});
+    }
+
+    const fetchOmdb = (movie) =>{
+
+        let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&"; 
+
+        const params = {
+            s: movie,
+            type: "movie",
+            r: "json"
+        };
+
+        url = url + "?origin=*";
+        Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
+
+        fetch(url)
+            .then((response) => {return response.json();})
+            .then((data) => {console.log(data.Search[0].imdbID);})
+            .catch((error) => {console.log(error);});
+
+    }
+    const handleClick = (movie) =>{
+        // fetchWikipedia(movie)
+        fetchOmdb(movie)
 
     }
 
