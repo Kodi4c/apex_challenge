@@ -25,6 +25,7 @@ body, #root, .App {
   width:100%;
   min-width:940px;
   height:100vh;
+  min-height:550px;
   background-image: url(D:\Web_Dev\Javascript\react_apex_labs\movie_finder\src\components\images\mountain_2.jpg);
   background-repeat: no-repeat;
   background-size: cover;

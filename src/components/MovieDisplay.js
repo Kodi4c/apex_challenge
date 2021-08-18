@@ -6,7 +6,7 @@
 //*********************************************** */
 
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import "./MovieDisplay.css"
 import { gql, useQuery } from '@apollo/client';
@@ -15,11 +15,21 @@ import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const OMBD_API = "5ea585f1"
+const IMDB_API ="https://www.imdb.com/title/"
 
 function MovieDisplay() {
 
+    let day = [];
+    let month = [];
+    let year = "";
+    let splitDate ="";
+    // let specificUrl = ""
+    let individualMovie = {}
+    let commonMovieData = []
     
     let [movieReceiver, setMovieReceiver] = useState("");
+    let specificUrl = useRef("")
+
 
     useEffect(() => {
         // console.log("RECEIVER effect: ",movieReceiver)
@@ -75,12 +85,6 @@ function MovieDisplay() {
 
     if (error) return throwError() ; 
 
-    let day = [];
-    let month = [];
-    let year = "";
-    let splitDate ="";
-
-
     const dateFormatter = (input) =>{
 
         if (input == null){
@@ -116,7 +120,7 @@ function MovieDisplay() {
             .catch(function(error){console.log(error);});
     }
 
-    const fetchOmdb = (movie) =>{
+    const fetchImdb = (movie) =>{
 
         let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&"; 
 
@@ -131,37 +135,89 @@ function MovieDisplay() {
 
         fetch(url)
             .then((response) => {return response.json();})
-            .then((data) => {console.log(data.Search[0].imdbID);})
+            .then((data) => {
+                specificUrl = IMDB_API + data.Search[0].imdbID
+                console.log(specificUrl)
+                commonMovieData["specificUrl"] = specificUrl
+                // console.log(commonMovieData)
+            })
             .catch((error) => {console.log(error);});
 
     }
-    const handleClick = (movie) =>{
-        // fetchWikipedia(movie)
-        fetchOmdb(movie)
+    // const handleClick = (movie) =>{
+    //     // fetchWikipedia(movie)
+    //     fetchImdb(movie)
+
+    // }
+
+    const fetchOne = () => {
+        commonMovieData = []
+        
+        data.searchMovies.map(movie => {
+            
+            // individualMovie = individualMovie + String(counter)
+
+            console.log(movie)
+            individualMovie["id"] = movie.id
+            individualMovie["name"] = movie.name
+            individualMovie["releaseDate"] = movie.releaseDate
+            individualMovie["overview"] = movie.overview
+            
+            let tmp = Object.assign({}, individualMovie);
+
+            commonMovieData.push(tmp)
+            fetchImdb(movie.name)
+            console.log(commonMovieData)
+            
+        
+            // movieReleaseDate = movie.releaseDate
+            // movieName = movie.name
+            // movieOverview = movie.overview
+        });
+        
+        // console.log(commonMovieData)
 
     }
+
+    // const fetchTwo = () => {
+    //     {commonMovieData.map(movie => (
+            
+            
+    //         fetchImdb(movie.name)
+            
+    //         // movieReleaseDate = movie.releaseDate
+    //         // movieName = movie.name
+    //         // movieOverview = movie.overview
+            
+            
+    //         ))};
+
+    // }
 
 
     return (
 
         <div id ="display_container">
             
-            
-            {data.searchMovies.map(movie => (
+           {fetchOne()}
+           {/* {fetchTwo()} */}
+            {/* {data.searchMovies.map(movie => (
                   
                   <Box id = "box">
                      # : {movie.id}<br/>
                      {dateFormatter(movie.releaseDate)}
                      Release Date : {year}/{month}/{day}<br/>
-                     <a href="https://www.google.com" 
-                        onClick={handleClick(movie.name)}  
+                     {fetchImdb(movie.name)}
+                     <a href={specificUrl.current} 
+                        // onClick={handleClick(movie.name)}  
                         target="_blank"
-                        >{movie.name}</a><br/>
+                        rel="noreferrer">
+                            {movie.name}</a><br/>
                      {movie.overview}<br/><br/>
   
                   </Box>
   
-                  ))};
+                  ))}; */}
 
             
         </div>
