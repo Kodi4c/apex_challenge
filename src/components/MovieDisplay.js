@@ -28,7 +28,7 @@ function MovieDisplay() {
     let commonMovieData = []
     
     let [movieReceiver, setMovieReceiver] = useState("");
-    let specificUrl = useRef("")
+    let specificUrl = ""
 
 
     useEffect(() => {
@@ -138,11 +138,13 @@ function MovieDisplay() {
             .then((data) => {
                 specificUrl = IMDB_API + data.Search[0].imdbID
                 console.log(specificUrl)
-                commonMovieData["specificUrl"] = specificUrl
+                return specificUrl
+                // commonMovieData["specificUrl"] = specificUrl
                 // console.log(commonMovieData)
             })
             .catch((error) => {console.log(error);});
 
+        // return specificUrl
     }
     // const handleClick = (movie) =>{
     //     // fetchWikipedia(movie)
@@ -157,16 +159,19 @@ function MovieDisplay() {
             
             // individualMovie = individualMovie + String(counter)
 
+            fetchImdb(movie.name)
+
             console.log(movie)
             individualMovie["id"] = movie.id
             individualMovie["name"] = movie.name
             individualMovie["releaseDate"] = movie.releaseDate
             individualMovie["overview"] = movie.overview
+            individualMovie["specificUrl"] = specificUrl
             
             let tmp = Object.assign({}, individualMovie);
 
             commonMovieData.push(tmp)
-            fetchImdb(movie.name)
+            // fetchImdb(movie.name)
             console.log(commonMovieData)
             
         
