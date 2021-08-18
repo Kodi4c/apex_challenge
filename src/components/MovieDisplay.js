@@ -120,22 +120,22 @@ function MovieDisplay() {
             .catch(function(error){console.log(error);});
     }
 
-    const printer = (movieId, movieReleaseDate, movieName, movieOverview, specificRoute) =>{
+    const printer = (movieObj, specificRoute) =>{
         console.log(`
-                    ID: ${movieId},\n
-                    ReleaseDate: ${movieReleaseDate},\n
-                    Movie name: ${movieName},\n
-                    Overview: ${movieOverview},\n
+                    ID: ${movieObj.id},\n
+                    ReleaseDate: ${movieObj.releaseDate},\n
+                    Movie name: ${movieObj.name},\n
+                    Overview: ${movieObj.overview},\n
                     specificRoute: ${specificRoute}\n
                      `)
     }
 
-    const fetchImdb = (movieId, movieReleaseDate, movieName, movieOverview) =>{
+    const fetchImdb = (movieObj) =>{
 
         let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&"; 
 
         const params = {
-            s: movieName,
+            s: movieObj.name,
             type: "movie",
             r: "json"
         };
@@ -150,7 +150,7 @@ function MovieDisplay() {
                 try{
                     specificUrl = IMDB_API + data.Search[0].imdbID
                     // console.log(specificUrl)
-                    printer(movieId, movieReleaseDate, movieName, movieOverview, specificUrl)
+                    printer(movieObj, specificUrl)
                 }catch{
                     console.log("Error with the IMDB fetched data")
                 }
@@ -170,11 +170,13 @@ function MovieDisplay() {
     const fetchOne = () => {
         commonMovieData = []
         
-        data.searchMovies.map(movie => {
+        data.searchMovies.map(movieObj => {
             
             // individualMovie = individualMovie + String(counter)
-            console.log(`before-- ${movie.name}`)
-            fetchImdb(movie.id, movie.releaseDate, movie.name, movie.overview)
+            console.log(`before-- ${movieObj.name}`)
+            // fetchImdb(movie.id, movie.releaseDate, movie.name, movie.overview)
+
+            fetchImdb(movieObj)
 
             // console.log(movie)
             // individualMovie["id"] = movie.id
