@@ -120,12 +120,22 @@ function MovieDisplay() {
             .catch(function(error){console.log(error);});
     }
 
-    const fetchImdb = (movie) =>{
+    const printer = (movieId, movieReleaseDate, movieName, movieOverview, specificRoute) =>{
+        console.log(`
+                    ID: ${movieId},\n
+                    ReleaseDate: ${movieReleaseDate},\n
+                    Movie name: ${movieName},\n
+                    Overview: ${movieOverview},\n
+                    specificRoute: ${specificRoute}\n
+                     `)
+    }
+
+    const fetchImdb = (movieId, movieReleaseDate, movieName, movieOverview) =>{
 
         let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&"; 
 
         const params = {
-            s: movie,
+            s: movieName,
             type: "movie",
             r: "json"
         };
@@ -136,15 +146,20 @@ function MovieDisplay() {
         fetch(url)
             .then((response) => {return response.json();})
             .then((data) => {
-                specificUrl = IMDB_API + data.Search[0].imdbID
-                console.log(specificUrl)
-                return specificUrl
-                // commonMovieData["specificUrl"] = specificUrl
-                // console.log(commonMovieData)
+                // console.log(`imdb -- ${data.Search}`)
+                try{
+                    specificUrl = IMDB_API + data.Search[0].imdbID
+                    // console.log(specificUrl)
+                    printer(movieId, movieReleaseDate, movieName, movieOverview, specificUrl)
+                }catch{
+                    console.log("Error with the IMDB fetched data")
+                }
+               
+                
             })
             .catch((error) => {console.log(error);});
 
-        // return specificUrl
+        
     }
     // const handleClick = (movie) =>{
     //     // fetchWikipedia(movie)
@@ -158,21 +173,21 @@ function MovieDisplay() {
         data.searchMovies.map(movie => {
             
             // individualMovie = individualMovie + String(counter)
+            console.log(`before-- ${movie.name}`)
+            fetchImdb(movie.id, movie.releaseDate, movie.name, movie.overview)
 
-            fetchImdb(movie.name)
-
-            console.log(movie)
-            individualMovie["id"] = movie.id
-            individualMovie["name"] = movie.name
-            individualMovie["releaseDate"] = movie.releaseDate
-            individualMovie["overview"] = movie.overview
-            individualMovie["specificUrl"] = specificUrl
+            // console.log(movie)
+            // individualMovie["id"] = movie.id
+            // individualMovie["name"] = movie.name
+            // individualMovie["releaseDate"] = movie.releaseDate
+            // individualMovie["overview"] = movie.overview
+            // individualMovie["specificUrl"] = specificUrl
             
-            let tmp = Object.assign({}, individualMovie);
+            // let tmp = Object.assign({}, individualMovie);
 
-            commonMovieData.push(tmp)
-            // fetchImdb(movie.name)
-            console.log(commonMovieData)
+            // commonMovieData.push(tmp)
+            // // fetchImdb(movie.name)
+            // console.log(commonMovieData)
             
         
             // movieReleaseDate = movie.releaseDate
