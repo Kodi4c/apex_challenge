@@ -67,3 +67,12 @@
     bottom: -10px;
 }
 
+li{
+    cursor: pointer;
+    list-style: none;
+    color:black
+}
+
+li:hover{
+    color:greenyellow;
+}

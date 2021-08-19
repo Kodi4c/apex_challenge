@@ -10,6 +10,7 @@ import React, {useState, useEffect} from 'react'
 
 import "./MovieDisplay.css"
 import Box from '@material-ui/core/Box';
+import DetailBox from './DetailBox'; 
 
 const OMBD_API = "5ea585f1"
 const IMDB_API ="https://www.imdb.com/title/"
@@ -25,12 +26,10 @@ function MovieDisplay({queryData}) {
     let individualMovie = {};
     let specificUrl = "";
     let tmp = {};
-    // let commonMovieData = useRef([]);
-    
-    // let [movieReceiver, setMovieReceiver] = useState("");
-    let [commonMovieData, setCommonMovieData] = useState([]);
-       
 
+    let [commonMovieData, setCommonMovieData] = useState([]);
+    
+       
     useEffect(() => {
         // setCommonMovieData(commonMovieData = [])
         setCommonMovieData(commonMovieData = [])
@@ -85,14 +84,7 @@ function MovieDisplay({queryData}) {
         individualMovie["specificUrl"] = specificUrl
         
         tmp = Object.assign({}, individualMovie);
-        // console.log(typeof(tmp))
-        // let newArray = [...commonMovieData];
-        // newArray.push({tmp});
         setCommonMovieData(commonMovieData => [...commonMovieData, tmp]);
-        // commonMovieData.push(tmp)
-        // console.log("commonMovie Data :  ",commonMovieData)
-        // setMd(mD.push(tmp))
-        // return commonMovieData;
     
     }
 
@@ -113,7 +105,7 @@ function MovieDisplay({queryData}) {
     
             Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
     
-            console.log("TMDB movie: ",movieObj.name)
+            // console.log("TMDB movie: ",movieObj.name)
 
             fetch(url)
                 .then((response) => {return response.json();})
@@ -136,54 +128,33 @@ function MovieDisplay({queryData}) {
         // console.log("imdb")
     
     }
-    
-    const renderDisplay = () => {
-        if (commonMovieData.length !== 0){
-            
-            {commonMovieData.map(movie=>{
-                <Box id = "box">
-                    # : {movie.id}<br/>
-                    {dateFormatter(movie.releaseDate)}
-                    Release Date : {year}/{month}/{day}<br/>
-                    <a href={movie.specificUrl} 
-                        // onClick={handleClick(movie.name)}  
-                        target="_blank"
-                        rel="noreferrer">
-                            {movie.name}</a><br/>
-                    {movie.overview}<br/><br/>
 
-                </Box>
-
-                return 0;
-            })}
-        }
+    const handleClick = (overView, specificUrl) => {
+         
+        return overView
+        //  <DetailBox overview = {overView} imdbLink = {specificUrl}/>
+         
     }
 
-    
     return (
 
         <div id ="display_container">
 
+           {commonMovieData.map(movie=>{
 
-           {/* {console.log("from movie display",queryData)} */}
-           {/* {fetchImdbDatabase(queryData)} */}
-           {commonMovieData.length}<br/>
-            {typeof(commonMovieData)}<br/>
-            {console.log(commonMovieData)}<br/>
-           {/* {commonMovieData.map(movie=>{
-
+                return(
                 <Box id = "box">
-                    # : {movie.id}<br/>
-                    {dateFormatter(movie.releaseDate)}
-                    Release Date : {year}/{month}/{day}<br/>
-                    <a href={movie.specificUrl} 
-                        // onClick={handleClick(movie.name)}  
-                        target="_blank"
-                        rel="noreferrer">
-                            {movie.name}</a><br/>
-                    {movie.overview}<br/><br/>
+                    #ID : {movie.id}<br/>
+                    Release Date : {movie.releaseDate}<br/>
+                    <li>
+                       Title: {movie.name}
+                    </li>
+                    
+                    <DetailBox overview = {movie.overview} imdbLink = {movie.specificUrl}/><br/><br/>
+                    
                 </Box>
-           })} */}
+                )
+           })}
 
         </div>
     )
