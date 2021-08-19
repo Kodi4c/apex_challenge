@@ -9,82 +9,35 @@
 import React, {useState, useEffect, useRef} from 'react'
 
 import "./MovieDisplay.css"
-import { gql, useQuery } from '@apollo/client';
-import eventBus from './Eventbus';
 import Box from '@material-ui/core/Box';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const OMBD_API = "5ea585f1"
 const IMDB_API ="https://www.imdb.com/title/"
 
-function MovieDisplay() {
+
+
+function MovieDisplay({queryData}) {
 
     let day = [];
     let month = [];
     let year = "";
     let splitDate ="";
-    // let specificUrl = ""
-    let individualMovie = {}
-    let commonMovieData = []
+    let individualMovie = {};
+    let specificUrl = "";
+    let tmp = {};
+    // let commonMovieData = useRef([]);
     
-    let [movieReceiver, setMovieReceiver] = useState("");
-    let specificUrl = ""
-
+    // let [movieReceiver, setMovieReceiver] = useState("");
+    let [commonMovieData, setCommonMovieData] = useState([]);
+       
 
     useEffect(() => {
-        // console.log("RECEIVER effect: ",movieReceiver)
-    }, [movieReceiver]);
+        // setCommonMovieData(commonMovieData = [])
+        fetchImdbDatabase(queryData)
+        
+    }, [queryData]);
 
-
-    eventBus.on("newSearchTerm", (data) =>{
-
-        setMovieReceiver(movieReceiver = data)
-        // console.log("RECEIVER event: ",movieReceiver)
-    });
     
-    const GET_MOVIES = gql`
-        query SearchMovies {
-            searchMovies(query: "${movieReceiver}") {
-            id
-            name
-            overview
-            releaseDate
-            cast {
-                id
-                person {
-                name
-                }
-                role {
-                ... on Cast {
-                    character
-                }
-                }
-            }
-            }
-        }
-    `
-
-    const { data, loading, error } = useQuery(GET_MOVIES);
-  
-
-    const loader = () => {
-        
-        if (loading) {
-            return <div className="query_message"><div><CircularProgress color="secondary"/></div><div>Loading...</div></div>; 
-        }    
-    }
-
-    const throwError = () =>{
-        
-        if (error) {
-            return <div className="query_message">'Error! ${error.message}'</div>
-        };
-    }
-
-    if (loading) return loader();  
-
-    if (error) return throwError() ; 
-
     const dateFormatter = (input) =>{
 
         if (input == null){
@@ -120,126 +73,114 @@ function MovieDisplay() {
             .catch(function(error){console.log(error);});
     }
 
-    const printer = (movieObj, specificRoute) =>{
-        console.log(`
-                    ID: ${movieObj.id},\n
-                    ReleaseDate: ${movieObj.releaseDate},\n
-                    Movie name: ${movieObj.name},\n
-                    Overview: ${movieObj.overview},\n
-                    specificRoute: ${specificRoute}\n
-                     `)
+    const objectMaker = (movieObj, specificUrl) =>{       
+        
+        individualMovie["id"] = movieObj.id
+        individualMovie["name"] = movieObj.name
+        individualMovie["releaseDate"] = movieObj.releaseDate
+        individualMovie["overview"] = movieObj.overview
+        individualMovie["specificUrl"] = specificUrl
+        
+        tmp = Object.assign({}, individualMovie);
+        
+        setCommonMovieData(commonMovieData.push(tmp))
+        // commonMovieData.push(tmp)
+        // console.log("commonMovie Data :  ",commonMovieData)
+        // setMd(mD.push(tmp))
+        // return commonMovieData;
+    
     }
 
-    const fetchImdb = (movieObj) =>{
+    const fetchImdbDatabase = (queryData) => {
 
-        let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&"; 
 
-        const params = {
-            s: movieObj.name,
-            type: "movie",
-            r: "json"
-        };
+        // setCommonMovieData(commonMovieData = [])
+    
+        queryData.map(movieObj => {
+    
+            // console.log("movie name fetch: ",movieObj.name)
+            let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&?origin=*"; 
+            let params = {
+                s: movieObj.name,
+                type: "movie",
+                r: "json"
+            };
+    
+            Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
+    
+            // console.log("url: ",url)
 
-        url = url + "?origin=*";
-        Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
-
-        fetch(url)
-            .then((response) => {return response.json();})
-            .then((data) => {
-                // console.log(`imdb -- ${data.Search}`)
-                try{
-                    specificUrl = IMDB_API + data.Search[0].imdbID
-                    // console.log(specificUrl)
-                    printer(movieObj, specificUrl)
-                }catch{
-                    console.log("Error with the IMDB fetched data")
-                }
-               
-                
-            })
-            .catch((error) => {console.log(error);});
-
-        
-    }
-    // const handleClick = (movie) =>{
-    //     // fetchWikipedia(movie)
-    //     fetchImdb(movie)
-
-    // }
-
-    const fetchOne = () => {
-        commonMovieData = []
-        
-        data.searchMovies.map(movieObj => {
-            
-            // individualMovie = individualMovie + String(counter)
-            console.log(`before-- ${movieObj.name}`)
-            // fetchImdb(movie.id, movie.releaseDate, movie.name, movie.overview)
-
-            fetchImdb(movieObj)
-
-            // console.log(movie)
-            // individualMovie["id"] = movie.id
-            // individualMovie["name"] = movie.name
-            // individualMovie["releaseDate"] = movie.releaseDate
-            // individualMovie["overview"] = movie.overview
-            // individualMovie["specificUrl"] = specificUrl
-            
-            // let tmp = Object.assign({}, individualMovie);
-
-            // commonMovieData.push(tmp)
-            // // fetchImdb(movie.name)
-            // console.log(commonMovieData)
-            
-        
-            // movieReleaseDate = movie.releaseDate
-            // movieName = movie.name
-            // movieOverview = movie.overview
+            fetch(url)
+                .then((response) => {return response.json();})
+                .then((data) => {
+                    try{
+                        // console.log("data from imdb: ",data.Search)
+                        specificUrl = IMDB_API + data.Search[0].imdbID
+                        // console.log(specificUrl)
+                        objectMaker(movieObj, specificUrl)
+                    }catch{
+                        console.log(`Movie --> ${movieObj.name} <-- not found in IMDB database`)
+                    }                    
+                })
+                .catch((error) => {console.log(error);});
+    
+            // return commonMovieData;
+    
         });
-        
-        // console.log(commonMovieData)
-
+        // console.log("imdb")
+    
     }
-
-    // const fetchTwo = () => {
-    //     {commonMovieData.map(movie => (
+    
+    const renderDisplay = () => {
+        if (commonMovieData.length != 0){
             
-            
-    //         fetchImdb(movie.name)
-            
-    //         // movieReleaseDate = movie.releaseDate
-    //         // movieName = movie.name
-    //         // movieOverview = movie.overview
-            
-            
-    //         ))};
-
-    // }
-
-
-    return (
-
-        <div id ="display_container">
-            
-           {fetchOne()}
-           {/* {fetchTwo()} */}
-            {/* {data.searchMovies.map(movie => (
-                  
-                  <Box id = "box">
-                     # : {movie.id}<br/>
-                     {dateFormatter(movie.releaseDate)}
-                     Release Date : {year}/{month}/{day}<br/>
-                     {fetchImdb(movie.name)}
-                     <a href={specificUrl.current} 
+            {commonMovieData.map(movie=>{
+                <Box id = "box">
+                    # : {movie.id}<br/>
+                    {dateFormatter(movie.releaseDate)}
+                    Release Date : {year}/{month}/{day}<br/>
+                    <a href={movie.specificUrl} 
                         // onClick={handleClick(movie.name)}  
                         target="_blank"
                         rel="noreferrer">
                             {movie.name}</a><br/>
-                     {movie.overview}<br/><br/>
-  
-                  </Box>
-  
-                  ))}; */}
+                    {movie.overview}<br/><br/>
+
+                </Box>
+            })}
+        }
+    }
+
+    
+    return (
+
+        <div id ="display_container">
+
+
+           {/* {console.log("from movie display",queryData)} */}
+           {/* {fetchImdbDatabase(queryData)} */}
+           {/* {commonMovieData}  */}
+           {/* # {commonMovieData.length}<br/>
+           
+           {commonMovieData.map(movie=>{
+
+
+                <Box id = "box">
+                    # : {movie.id}<br/>
+                    {dateFormatter(movie.releaseDate)}
+                    Release Date : {year}/{month}/{day}<br/>
+                    <a href={movie.specificUrl} 
+                        // onClick={handleClick(movie.name)}  
+                        target="_blank"
+                        rel="noreferrer">
+                            {movie.name}</a><br/>
+                    {movie.overview}<br/><br/>
+
+                </Box>
+
+                
+
+           })} */}
 
             
         </div>
