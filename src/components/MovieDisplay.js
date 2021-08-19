@@ -6,7 +6,7 @@
 //*********************************************** */
 
 
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import "./MovieDisplay.css"
 import Box from '@material-ui/core/Box';
@@ -33,6 +33,7 @@ function MovieDisplay({queryData}) {
 
     useEffect(() => {
         // setCommonMovieData(commonMovieData = [])
+        setCommonMovieData(commonMovieData = [])
         fetchImdbDatabase(queryData)
         
     }, [queryData]);
@@ -75,15 +76,19 @@ function MovieDisplay({queryData}) {
 
     const objectMaker = (movieObj, specificUrl) =>{       
         
+        dateFormatter(movieObj.releaseDate)
+
         individualMovie["id"] = movieObj.id
         individualMovie["name"] = movieObj.name
-        individualMovie["releaseDate"] = movieObj.releaseDate
+        individualMovie["releaseDate"] = year + "/" + month + "/" + day
         individualMovie["overview"] = movieObj.overview
         individualMovie["specificUrl"] = specificUrl
         
         tmp = Object.assign({}, individualMovie);
-        
-        setCommonMovieData(commonMovieData.push(tmp))
+        // console.log(typeof(tmp))
+        // let newArray = [...commonMovieData];
+        // newArray.push({tmp});
+        setCommonMovieData(commonMovieData => [...commonMovieData, tmp]);
         // commonMovieData.push(tmp)
         // console.log("commonMovie Data :  ",commonMovieData)
         // setMd(mD.push(tmp))
@@ -108,7 +113,7 @@ function MovieDisplay({queryData}) {
     
             Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
     
-            // console.log("url: ",url)
+            console.log("TMDB movie: ",movieObj.name)
 
             fetch(url)
                 .then((response) => {return response.json();})
@@ -125,6 +130,7 @@ function MovieDisplay({queryData}) {
                 .catch((error) => {console.log(error);});
     
             // return commonMovieData;
+            return 0;
     
         });
         // console.log("imdb")
@@ -132,7 +138,7 @@ function MovieDisplay({queryData}) {
     }
     
     const renderDisplay = () => {
-        if (commonMovieData.length != 0){
+        if (commonMovieData.length !== 0){
             
             {commonMovieData.map(movie=>{
                 <Box id = "box">
@@ -147,6 +153,8 @@ function MovieDisplay({queryData}) {
                     {movie.overview}<br/><br/>
 
                 </Box>
+
+                return 0;
             })}
         }
     }
@@ -159,11 +167,10 @@ function MovieDisplay({queryData}) {
 
            {/* {console.log("from movie display",queryData)} */}
            {/* {fetchImdbDatabase(queryData)} */}
-           {/* {commonMovieData}  */}
-           {/* # {commonMovieData.length}<br/>
-           
-           {commonMovieData.map(movie=>{
-
+           {commonMovieData.length}<br/>
+            {typeof(commonMovieData)}<br/>
+            {console.log(commonMovieData)}<br/>
+           {/* {commonMovieData.map(movie=>{
 
                 <Box id = "box">
                     # : {movie.id}<br/>
@@ -175,14 +182,9 @@ function MovieDisplay({queryData}) {
                         rel="noreferrer">
                             {movie.name}</a><br/>
                     {movie.overview}<br/><br/>
-
                 </Box>
-
-                
-
            })} */}
 
-            
         </div>
     )
 }

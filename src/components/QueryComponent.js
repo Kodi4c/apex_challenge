@@ -5,7 +5,7 @@
 //
 //*********************************************** */
 
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect} from 'react'
 import { gql, useQuery } from "@apollo/client";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MovieDisplay from './MovieDisplay';
