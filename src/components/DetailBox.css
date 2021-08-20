@@ -25,7 +25,12 @@
     src: url('./fonts/RashkeyRegular-PKXGd.ttf');   
 }
 
-
+#detailBoxContainer{
+    width:100%;
+    height:100%;
+    box-sizing: border-box;
+    visibility:visible;
+}
 
 #detailBox{
     width:100%;

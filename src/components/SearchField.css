@@ -6,34 +6,10 @@
 ***********************************/
 
 
-@font-face {
-    font-family: 'Paradise';
-    src: url('./fonts/Paradise886-YzX4y.otf');   
-}
-
-@font-face {
-    font-family: 'Randhu';
-    src: url('./fonts/RandhuFreeTrial-1GX6e.otf');   
-}
 
 @font-face {
     font-family: 'Ras1';
     src: url('./fonts/RashkeyRegular-d9yxV.otf');   
-}
-
-@font-face {
-    font-family: 'Ras2';
-    src: url('./fonts/RashkeyRegular-PKXGd.ttf');   
-}
-
-@font-face {
-    font-family: 'The1';
-    src: url('./fonts/Thegraffiti-0Wlzo.otf');   
-}
-
-@font-face {
-    font-family: 'The2';
-    src: url('./fonts/Thegraffiti-0Wlzo\(1\).otf');   
 }
 
 
@@ -45,15 +21,4 @@
     width:100%;
     min-width: 926px;
 }
-/* .box_container{
-    display:"flex"; 
-    flex-direction:"column";
-    justify-content:"center";
-    align-items:"center";
-}
 
-.box_nested{
-    display:"flex"; 
-    justify-content:"center";
-    align-items:"center";
-} */

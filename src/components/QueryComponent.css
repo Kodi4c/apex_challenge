@@ -1,0 +1,26 @@
+/*********************************** 
+*
+*       Movie Display CSS
+*
+*
+***********************************/
+@font-face {
+    font-family: 'Randhu';
+    src: url('./fonts/RandhuFreeTrial-1GX6e.otf');   
+}
+
+.query_message{
+    width:100%;
+    height:auto;
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items: center;
+    color:black;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 50px;
+    padding-top: 40px;
+    box-sizing: border-box;
+    font-family: "Randhu";
+}

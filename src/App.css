@@ -12,11 +12,6 @@ body, #root, .App {
   padding:0px;
   box-sizing:border-box;
   font-family: monospace;
-  /* background-image: url(D:\Web_Dev\Javascript\react_apex_labs\movie_finder\src\components\images\mountain_2.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center; */
-  /* resize: both; */
   background-color:#231c8c;
 
 }
@@ -26,7 +21,7 @@ body, #root, .App {
   min-width:940px;
   height:100vh;
   min-height:550px;
-  background-image: url(D:\Web_Dev\Javascript\react_apex_labs\movie_finder\src\components\images\mountain_2.jpg);
+  background-image: url(./components/images/mountain_2.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;

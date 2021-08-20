@@ -11,10 +11,9 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import SendIcon from '@material-ui/icons/Send';
 
-function DetailBox({overview, imdbLink}) {
 
+function DetailBox({overview, imdbLink, wikiDescription}) {
 
-    // let [state, setstate] = useState(initialState)
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -28,42 +27,31 @@ function DetailBox({overview, imdbLink}) {
 
     const classes = useStyles();
 
-    const handleClick = () => {
-
-    }
 
     return (
-        <div>
+        <div id ="detailBoxContainer">
             <Box id = "detailBox">
                 <a href= {imdbLink}
-                   target = "_blank">
+                   target = "_blank"
+                   rel="noreferrer">
                     <Button
                         variant="contained"
                         color="primary"
                         className={classes.button}
-                        startIcon={<SendIcon/>}>
+                        endIcon={<SendIcon/>}>
                         IMDB Link
                     </Button>
-                </a>
+                </a><br/><br/>
             
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<SendIcon/>}
-                    onClick = {() => handleClick}>
-                    TMDB Description
-                </Button>
+                <div>
+                    Wikipedia Description<br/><br/>
+                    {wikiDescription}<br/><br/>
+                </div>
 
-                <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<SendIcon/>}>
-                    Wikipedia Description
-                </Button><br/><br/>
-                
-                {overview}<br/>
+                <div>
+                    TMDB Movie Plot<br/><br/>
+                    {overview}<br/><br/>
+                </div>
                 
             </Box>
             

@@ -28,52 +28,29 @@ function MovieDisplay({queryData}) {
     let tmp = {};
 
     let [commonMovieData, setCommonMovieData] = useState([]);
-    
-       
+    let [showDiv, setShowDiv] = useState(false);   
+
     useEffect(() => {
-        // setCommonMovieData(commonMovieData = [])
         setCommonMovieData(commonMovieData = [])
         fetchImdbDatabase(queryData)
         
     }, [queryData]);
 
     
-    const dateFormatter = (input) =>{
+    const dateFormatter = (rawDate) =>{
 
-        if (input == null){
+        if (rawDate == null){
             console.log("Input 0")
         }else{
-        // console.log(input)
-        // console.log(typeof (input))
-        splitDate = input.split("-",3) 
+        splitDate = rawDate.split("-",3) 
         year = splitDate[0]
         month = splitDate[1]
         day = splitDate[2].split("T",1)
-        // console.log(day + "/" + month + "/" +  year)
         }
  
     }
 
-    const fetchWikipedia = (movie) => {
-        let url = "https://en.wikipedia.org/w/api.php"; 
-
-        const params = {
-            action: "query",
-            list: "search",
-            srsearch: movie,
-            format: "json"
-        };
-
-        url = url + "?origin=*";
-        Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
-
-        fetch(url)
-            .then(function(response){return response.json();})
-            .then(function(response) {console.log(response);})
-            .catch(function(error){console.log(error);});
-    }
-
-    const objectMaker = (movieObj, specificUrl) =>{       
+    const objectMaker = (movieObj, specificUrl, wikiExtract) =>{       
         
         dateFormatter(movieObj.releaseDate)
 
@@ -82,20 +59,31 @@ function MovieDisplay({queryData}) {
         individualMovie["releaseDate"] = year + "/" + month + "/" + day
         individualMovie["overview"] = movieObj.overview
         individualMovie["specificUrl"] = specificUrl
+        individualMovie["wikiExtract"] = wikiExtract
         
         tmp = Object.assign({}, individualMovie);
         setCommonMovieData(commonMovieData => [...commonMovieData, tmp]);
     
     }
 
+    const fetchWikipedia = (movieObj, specificUrl) => {
+        let url = "https://en.wikipedia.org/api/rest_v1/page/summary/"; 
+
+        url = url + movieObj.name;
+    
+        fetch(url)
+            .then((response) => {return response.json();})
+            .then((data) => {
+                // console.log(data.extract);
+                objectMaker(movieObj, specificUrl, data.extract);
+            })
+            .catch((error) => {console.log(error);});
+    }
+
     const fetchImdbDatabase = (queryData) => {
-
-
-        // setCommonMovieData(commonMovieData = [])
     
         queryData.map(movieObj => {
     
-            // console.log("movie name fetch: ",movieObj.name)
             let url = "http://www.omdbapi.com/?apikey=" + OMBD_API + "&?origin=*"; 
             let params = {
                 s: movieObj.name,
@@ -104,37 +92,32 @@ function MovieDisplay({queryData}) {
             };
     
             Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
-    
-            // console.log("TMDB movie: ",movieObj.name)
 
             fetch(url)
                 .then((response) => {return response.json();})
                 .then((data) => {
                     try{
-                        // console.log("data from imdb: ",data.Search)
                         specificUrl = IMDB_API + data.Search[0].imdbID
-                        // console.log(specificUrl)
-                        objectMaker(movieObj, specificUrl)
+                        fetchWikipedia(movieObj, specificUrl)
                     }catch{
                         console.log(`Movie --> ${movieObj.name} <-- not found in IMDB database`)
                     }                    
                 })
                 .catch((error) => {console.log(error);});
-    
-            // return commonMovieData;
+
             return 0;
-    
         });
-        // console.log("imdb")
     
     }
 
-    const handleClick = (overView, specificUrl) => {
-         
-        return overView
-        //  <DetailBox overview = {overView} imdbLink = {specificUrl}/>
-         
+    const handleClick = () => {
+        if (showDiv === true){
+            setShowDiv(false)
+        }else{
+            setShowDiv(true)
+        }
     }
+
 
     return (
 
@@ -143,14 +126,15 @@ function MovieDisplay({queryData}) {
            {commonMovieData.map(movie=>{
 
                 return(
-                <Box id = "box">
+                <Box id = "box" key={movie.id}>
                     #ID : {movie.id}<br/>
                     Release Date : {movie.releaseDate}<br/>
-                    <li>
+                    <li onClick = {handleClick}>
                        Title: {movie.name}
-                    </li>
+                    </li><br/>
                     
-                    <DetailBox overview = {movie.overview} imdbLink = {movie.specificUrl}/><br/><br/>
+                    {showDiv ? <DetailBox overview = {movie.overview} imdbLink = {movie.specificUrl} wikiDescription = {movie.wikiExtract}/> : null}
+                    <br/><br/>
                     
                 </Box>
                 )

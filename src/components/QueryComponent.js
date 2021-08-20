@@ -10,6 +10,7 @@ import { gql, useQuery } from "@apollo/client";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import MovieDisplay from './MovieDisplay';
 import eventBus from './Eventbus';
+import "./QueryComponent.css"
 
 function QueryComponent() {
 
@@ -50,11 +51,12 @@ function QueryComponent() {
 
     if (loading) return <div className="query_message"><div><CircularProgress color="secondary"/></div><div>Loading...</div></div>;  
         
-    if (error) return <div className="query_message">'Error! ${error.message}'</div> ; 
+    if (error) return <div className="query_message"></div> ; 
+
+    // 'Error! ${error.message}'
 
     return (
         <div>
-            {/* {console.log(data)} */}
             <MovieDisplay queryData = {data.searchMovies}/>
         </div>
     )

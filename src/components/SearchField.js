@@ -39,10 +39,7 @@ function SearchField() {
     }
 
     const handleClick = () =>{
-
-        // console.log("value ref:",valueRef.current.value)
         setMovieSender(movieSender = valueRef.current.value)
-        // console.log("starting SEND: ",movieSender)
         eventBus.dispatch("newSearchTerm",movieSender)
         clearText()
         
