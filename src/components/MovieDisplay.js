@@ -28,7 +28,7 @@ function MovieDisplay({queryData}) {
     let tmp = {};
 
     let [commonMovieData, setCommonMovieData] = useState([]);
-    let [showDiv, setShowDiv] = useState(false);   
+    let [showDiv, setShowDiv] = useState({visibility: false, movieId: 0});  
 
     useEffect(() => {
         setCommonMovieData(commonMovieData = [])
@@ -110,12 +110,8 @@ function MovieDisplay({queryData}) {
     
     }
 
-    const handleClick = () => {
-        if (showDiv === true){
-            setShowDiv(false)
-        }else{
-            setShowDiv(true)
-        }
+    const handleClick = (currentVisibility, passedMovieId) => {
+       setShowDiv({...showDiv, visibility : !currentVisibility , movieId: passedMovieId})
     }
 
 
@@ -129,11 +125,11 @@ function MovieDisplay({queryData}) {
                 <Box id = "box" key={movie.id}>
                     #ID : {movie.id}<br/>
                     Release Date : {movie.releaseDate}<br/>
-                    <li onClick = {handleClick}>
+                    <li onClick = {() => handleClick(showDiv.visibility, movie.id)}>
                        Title: {movie.name}
                     </li><br/>
                     
-                    {showDiv ? <DetailBox overview = {movie.overview} imdbLink = {movie.specificUrl} wikiDescription = {movie.wikiExtract}/> : null}
+                    {showDiv.visibility && showDiv.movieId === movie.id ? <DetailBox id = {movie.id} overview = {movie.overview} imdbLink = {movie.specificUrl} wikiDescription = {movie.wikiExtract}/> : null}
                     <br/><br/>
                     
                 </Box>
