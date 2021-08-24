@@ -1,1 +1,1 @@
-The complete project is within the "chain" branch, please make sure to clone that instead of the "master". The "master" branch was only used initially, then all subsequent amendments were made to the chain branch. 
+The complete project is within the **"chain" branch**, please make sure to clone that instead of the "master". The "master" branch was only used initially, then all subsequent amendments were made to the chain branch. 
